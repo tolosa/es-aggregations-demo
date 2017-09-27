@@ -14,6 +14,7 @@
 class Product < ApplicationRecord
   belongs_to :seller
   belongs_to :manofacturer
+  has_and_belongs_to_many :categories
 
   validates :name, presence: true
   validates :price, numericality: true, presence: true
