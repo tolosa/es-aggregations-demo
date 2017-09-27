@@ -1,7 +1,38 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+COUNTS = { products: 500, categories: 10, sellers: 10, manofacturers: 5 }.freeze
+
+Faker::Config.random = Random.new(666)
+
+ActiveRecord::Base.transaction do
+  # clears all
+  Product.destroy_all
+  [Category, Manofacturer, Seller].each(&:delete_all)
+
+  # create categories
+  categories = []
+  COUNTS[:categories].times do
+    categories << Category.create!(name: Faker::Commerce.unique.department(1))
+  end
+
+  # create sellers
+  sellers = []
+  COUNTS[:sellers].times do
+    sellers << Seller.create!(first_name: Faker::Name.unique.first_name,
+      last_name: Faker::Name.unique.last_name)
+  end
+
+  # create manofacturers
+  manofacturers = []
+  COUNTS[:manofacturers].times do
+    manofacturers << Manofacturer.create!(name: Faker::Company.unique.name,
+      description: Faker::Company.unique.catch_phrase)
+  end
+
+  # create products
+  COUNTS[:products].times do
+    Product.create! name: Faker::Commerce.unique.product_name,
+      price: Faker::Commerce.unique.price,
+      categories: categories.sample(rand(1..3)),
+      manofacturer: manofacturers.sample,
+      seller: sellers.sample
+  end
+end
