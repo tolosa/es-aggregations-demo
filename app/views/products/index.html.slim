@@ -1,0 +1,20 @@
+.container
+  .row
+    .col
+      h1 Products
+      table.table
+        thead
+          tr
+            th Product name
+            th Price
+            th Seller
+            th Manofacturer
+            th Categories
+        tbody
+          -@products.each do |product|
+            tr
+              td=product.name
+              td=product.formatted_price
+              td=product.seller.full_name
+              td=product.manofacturer.name
+              td=product.categories
