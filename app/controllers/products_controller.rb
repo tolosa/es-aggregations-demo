@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
   def index
-    @products = Product.limit(20)
+    @products = Product.page params[:page]
   end
 end

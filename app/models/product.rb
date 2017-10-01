@@ -28,6 +28,8 @@ class Product < ApplicationRecord
 
   default_scope -> { includes(%i[seller manofacturer categories]) }
 
+  paginates_per 25
+
   def formatted_price
     "$#{read_attribute(:price)}"
   end
