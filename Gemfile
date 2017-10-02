@@ -24,6 +24,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'faker'
 gem 'slim'
 gem 'kaminari', git: 'https://github.com/kaminari/kaminari'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
