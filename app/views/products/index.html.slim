@@ -1,35 +1,34 @@
-.container
-  .row
-    .col
-      h1 Products
+.row
+  .col
+    h1 Products
 
-  .row
-    .col
-      =form_tag(root_path, method: :get) do
-        .form-group
-          =text_field_tag :q, @search, class: 'form-control form-control-lg', placeholder: 'Enter search term'
-        =submit_tag 'Search', class: 'btn btn-primary'
-        =link_to 'Show all', root_path, class: 'btn btn-link'
+.row
+  .col
+    =form_tag(root_path, method: :get) do
+      .form-group
+        =text_field_tag :q, @search, class: 'form-control form-control-lg', placeholder: 'Enter search term'
+      =submit_tag 'Search', class: 'btn btn-primary'
+      =link_to 'Show all', root_path, class: 'btn btn-link'
 
-  .row
-    .col
-      table.table.mt-4
-        thead
+.row
+  .col
+    table.table.mt-4
+      thead
+        tr
+          th Product name
+          th Price
+          th Seller
+          th Manofacturer
+          th Categories
+      tbody
+        -@products.each do |product|
           tr
-            th Product name
-            th Price
-            th Seller
-            th Manofacturer
-            th Categories
-        tbody
-          -@products.each do |product|
-            tr
-              td=product.name
-              td=product.formatted_price
-              td=product.seller.full_name
-              td=product.manofacturer.name
-              td=product.categories
+            td=product.name
+            td=product.formatted_price
+            td=product.seller.full_name
+            td=product.manofacturer.name
+            td=product.categories
 
-  .row
-    .col
-      =paginate @products
+.row
+  .col
+    =paginate @products
