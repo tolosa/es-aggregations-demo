@@ -5,7 +5,19 @@ module Searchable
     include Elasticsearch::Model
     include Elasticsearch::Model::Callbacks
 
-    def self.search(query)
+    def as_indexed_json(options = {})
+      self.as_json(
+        only: [:name, :price],
+        include: {
+          categories: { only: :name },
+          manofacturer: { only: :name },
+          seller: { only: :full_name , methods: [:full_name] }
+        })
+    end
+  end
+
+  class_methods do
+    def search(query)
       __elasticsearch__.search(query.blank? ? '*' : {
         query: {
           multi_match: {
@@ -16,16 +28,6 @@ module Searchable
           }
         }
       })
-    end
-
-    def as_indexed_json(options = {})
-      self.as_json(
-        only: [:name, :price],
-        include: {
-          categories: { only: :name },
-          manofacturer: { only: :name },
-          seller: { only: :full_name , methods: [:full_name] }
-        })
     end
   end
 end
