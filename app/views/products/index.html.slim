@@ -17,11 +17,11 @@
               -@aggregations.each do |(key, aggregation)|
                 td
                   ul.list-unstyled
-                    -aggregation.each do |bucket|
+                    =collection_check_boxes :filters, key, aggregation, :id, :name, checked: (@filters[key] || []), include_hidden: false do |f|
                       li
-                        =>check_box_tag bucket.group, bucket.id
-                        =bucket.name
-                        span.text-secondary<="(#{bucket.count})"
+                        =>f.check_box
+                        =>f.label
+                        span.text-secondary="(#{f.object.count})"
 
       =submit_tag 'Search', class: 'btn btn-primary'
       =link_to 'Show all', root_path, class: 'btn btn-link'

@@ -23,26 +23,45 @@ module Searchable
   end
 
   class_methods do
-    def search(term)
-      __elasticsearch__.search search_query(term).merge(aggregation_query)
+    def search(term, filters)
+      __elasticsearch__.search search_query(term, filters).merge(aggregation_query)
     end
 
     private
 
-    def search_query(term)
-      if term.blank?
-        { size: 0 }
-      else
-        {
-          query: {
-            multi_match: {
-              query: term,
-              type: 'cross_fields',
-              fields: '_all',
-              operator: 'AND'
+    def search_query(term, filters)
+      {
+        query: {
+          bool: {
+            must: terms_query(term),
+            filter: {
+              bool: {
+                must: filters_query(filters)
+              }
             }
           }
         }
+      }
+    end
+
+    def terms_query(term)
+      if term.blank?
+        { match_all: {} }
+      else
+        {
+          multi_match: {
+            query: term,
+            type: 'cross_fields',
+            fields: '_all',
+            operator: 'AND'
+          }
+        }
+      end
+    end
+
+    def filters_query(filters)
+      filters.map do |(filter, ids)|
+        { terms: { "#{filter}.id" => ids } }
       end
     end
 
