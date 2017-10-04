@@ -5,8 +5,24 @@
 .row
   .col
     =form_tag(root_path, method: :get) do
-      .form-group
-        =text_field_tag :q, @search, class: 'form-control form-control-lg', placeholder: 'Enter search term'
+      =text_field_tag :q, @search, class: 'form-control form-control-lg', placeholder: 'Enter search term'
+      p.lead.mt-3 Refine results by:
+      table.table
+        thead
+          tr
+            -@aggregations.each do |(key, aggregation)|
+              th=key.titleize
+        tbody
+            tr
+              -@aggregations.each do |(key, aggregation)|
+                td
+                  ul.list-unstyled
+                    -aggregation.each do |bucket|
+                      li
+                        =>check_box_tag bucket.group, bucket.id
+                        =bucket.name
+                        span.text-secondary<="(#{bucket.count})"
+
       =submit_tag 'Search', class: 'btn btn-primary'
       =link_to 'Show all', root_path, class: 'btn btn-link'
 
