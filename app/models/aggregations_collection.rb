@@ -5,6 +5,7 @@ class AggregationsCollection < Hash
         buckets = aggregation.buckets.map do |bucket|
           Aggregation.build_from_bucket(bucket, key)
         end
+        buckets.sort_by!(&:name)
         aggregations.store(key, buckets)
       end
     end
