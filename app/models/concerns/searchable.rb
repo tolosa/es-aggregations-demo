@@ -24,7 +24,7 @@ module Searchable
 
   class_methods do
     def search(term, filters)
-      __elasticsearch__.search search_query(term, filters).merge(aggregation_query)
+      __elasticsearch__.search search_query(term, filters)
     end
 
     private
@@ -40,7 +40,8 @@ module Searchable
               }
             }
           }
-        }
+        },
+        aggregations: aggregations_query
       }
     end
 
@@ -65,14 +66,14 @@ module Searchable
       end
     end
 
-    def aggregation_query
-      query = {}
-      AGGREGATIONS.each do |(name, args)|
-        query[name] = {
-          terms: { field: args[:field] }
-        }
+    def aggregations_query
+      {}.tap do |query|
+        AGGREGATIONS.each do |(name, args)|
+          query.store name, {
+            terms: { field: args[:field] }
+          }
+        end
       end
-      { aggregations: query }
     end
   end
 end
