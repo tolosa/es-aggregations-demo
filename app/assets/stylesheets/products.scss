@@ -1,4 +1,13 @@
-.table {
+.container {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.table.filters {
+  margin: 0;
+  th {
+    width: 33%;
+  }
   ul {
     margin: 0;
     label {

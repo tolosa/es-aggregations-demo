@@ -1,50 +1,58 @@
 .row
   .col
-    h1 Products
+    h1.text-info
+      | Awesome products search!
+      small.text-muted< with Elasticsearch
+    p Demo Rails application to show search functionality with Elasticsearch aggregations.
+    hr/
 
 .row
   .col
     =form_tag(root_path, method: :get) do
+      h2.mb-2 Search
       =text_field_tag :q, @search, class: 'form-control form-control-lg', placeholder: 'Enter search term'
-      p.lead.mt-3 Refine results by:
-      table.table
-        thead
-          tr
-            -@aggregations.each do |(key, aggregation)|
-              th=key.titleize
-        tbody
+      -if @products.present?
+        p.lead.mt-4.mb-2 Filter results by:
+        table.table.filters.mb-2
+          thead
             tr
               -@aggregations.each do |(key, aggregation)|
-                td
-                  ul.list-unstyled
-                    =collection_check_boxes :filters, key, aggregation, :id, :name, checked: (@filters[key] || []), include_hidden: false do |f|
-                      li
-                        =>f.check_box
-                        =>f.label
-                        span.text-secondary="(#{f.object.count})"
+                th=key.titleize
+          tbody
+              tr
+                -@aggregations.each do |(key, aggregation)|
+                  td
+                    ul.list-unstyled
+                      =collection_check_boxes :filters, key, aggregation, :id, :name, checked: (@filters[key] || []), include_hidden: false do |f|
+                        li
+                          =>f.check_box
+                          =>f.label
+                          span.text-secondary="(#{f.object.count})"
 
+      p.text-muted.mt-2
+        b>=@products.total_count
+        | products found
       =submit_tag 'Search', class: 'btn btn-primary'
       =link_to 'Show all', root_path, class: 'btn btn-link'
 
-.row
-  .col
-    table.table.mt-4
-      thead
-        tr
-          th Product name
-          th Price
-          th Seller
-          th Manofacturer
-          th Categories
-      tbody
-        -@products.each do |product|
+-if @products.present?
+  .row
+    .col
+      table.table.mt-4
+        thead
           tr
-            td=product.name
-            td=product.formatted_price
-            td=product.seller.full_name
-            td=product.manofacturer.name
-            td=product.categories
+            th Product name
+            th Price
+            th Seller
+            th Manofacturer
+            th Categories
+        tbody
+          -@products.each do |product|
+            tr
+              td=product.name
+              td=product.formatted_price
+              td=product.seller.full_name
+              td=product.manofacturer.name
+              td=product.categories
 
-.row
-  .col
-    =paginate @products
+      =paginate @products
